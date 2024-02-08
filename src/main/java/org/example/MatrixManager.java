@@ -1,12 +1,10 @@
 package org.example;
 
-import lombok.Getter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
 
-@Getter
 public class MatrixManager {
     private int[][] matrix;
     private int stringsAmount;
@@ -38,12 +36,20 @@ public class MatrixManager {
         searcher.printResult();
     }
 
+    public int[][] getMatrix() {
+        return matrix;
+    }
 
+    public int getStringsAmount() {
+        return stringsAmount;
+    }
 
+    public int getStringsLength() {
+        return stringsLength;
+    }
 
-
-
-
-
-
+    public Searcher getSearcher() {
+        return searcher;
+    }
 }
+

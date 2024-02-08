@@ -36,8 +36,8 @@ public class Searcher {
         rectanglesLengthMap = new HashMap<>();
         rectangleIndex = DEFAULT_RECTANGLE_INDEX;
         nestingLevel = DEFAULT_NESTING_LEVEL;
-        xLength = matrix.length;
-        yLength = matrix[0].length;
+        xLength = matrix[0].length - 1;
+        yLength = matrix.length - 1;
     }
 
     /*
@@ -46,18 +46,20 @@ public class Searcher {
         это правый нижний угол матрицы
     */
     public void findRectangles(Point upperLeftCorner, Point lowerRightCorner) {
-        for (int x = upperLeftCorner.getX(); x < lowerRightCorner.getX(); x++) {
-            for (int y = upperLeftCorner.getY(); y < lowerRightCorner.getY(); y++) {
+
+        for (int y = upperLeftCorner.getY(); y < lowerRightCorner.getY(); y++) {
+            for (int x = upperLeftCorner.getX(); x < lowerRightCorner.getX(); x++) {
                 //проверяем не нашли ли мы границу отмеченного прямоугольника
-                if (checkIfFoundMarkedBorder(matrix[x][y])) {
+                if (checkIfFoundMarkedBorder(matrix[y][x])) {
                     //пропускаем эту часть строки матрицы, т.к. её занимает уже отмеченный прямоугольник
-                    x += rectanglesLengthMap.get(matrix[x][y]); //todo можно написать лучше, здесь два раза и +1 в некст ифе обращаемся к матрице, можно наверное один
-                }
-                //проверяем не нашли ли мы новый прямоугольник
-                if (checkIfFoundNewRectangleCorner(x, y)) {
+                    x += rectanglesLengthMap.get(matrix[y][x]); //todo можно написать лучше, здесь два раза и +1 в некст ифе обращаемся к матрице, можно наверное один, еще проблемы что перепрыгиваю за край матрицы с увеличением
+                    //проверяем не нашли ли мы новый прямоугольник
+                } else if (checkIfFoundNewRectangleCorner(x, y)) {//todo поменять проверку а то костыль
                     manageRectangle(x, y);//основная логика todo поменять название а то не очень отражает суть функции
 
                 }
+
+
             }
         }
 
@@ -78,14 +80,14 @@ public class Searcher {
         //перед рекурсивным вызовом поиска прямоугольников увеличиваем уровень вложенности
         nestingLevel++;
         //вызов поиска прямоугольников внутри найденного прямоугольника
-        findRectangles(foundRectangle.getUpperLeftCorner(), foundRectangle.getLowerRightCorner());
+        findRectangles(foundRectangle.getUpperLeftCornerOfSearchZone(), foundRectangle.getLowerRightCornerOfSearchZone());
         //после выхода из рекурсии уменьшаем уровень вложенности
         nestingLevel--;
     }
 
     //проверка не является ли переданная координата левым верхним углом прямоугольника
     public boolean checkIfFoundNewRectangleCorner(int x, int y) {
-        return matrix[x][y] == 1 && matrix[x + 1][y] == 1 && matrix[x][y + 1] == 1;
+        return matrix[y][x] == 1 && matrix[y + 1][x] == 1 && matrix[y][x + 1] == 1;
     }
 
     public boolean checkIfFoundMarkedBorder(int value) {
@@ -97,25 +99,25 @@ public class Searcher {
         int x = upperLeftCorner.getX();
         int y = upperLeftCorner.getY();
         //отрисовка верхней стороны
-        while (matrix[x + 1][y] != 0 && matrix[x][y] == 1) {
-            matrix[x][y] = rectangleIndex;
+        while (matrix[y][x + 1] != 0 && matrix[y][x] == 1) {
+            matrix[y][x] = rectangleIndex;
             x++;
         }
         //отрисовка правой стороны
-        while (matrix[x][y + 1] != 0 && matrix[x][y] == 1) {
-            matrix[x][y] = rectangleIndex;
+        while (matrix[y + 1][x] != 0 && matrix[y][x] == 1) {
+            matrix[y][x] = rectangleIndex;
             y++;
         }
         //мы в правом нижнем углу
         Point lowerRightCorner = new Point(x, y);
         //отрисовка нижней стороны + доп проверка что мы не вышли за границы матрицы
-        while (x > 0 && matrix[x - 1][y] != 0 && matrix[x][y] == 1) {
-            matrix[x][y] = rectangleIndex;
+        while (x > 0 && matrix[y][x - 1] != 0 && matrix[y][x] == 1) {
+            matrix[y][x] = rectangleIndex;
             x--;
         }
         //отрисовка левой стороны + доп проверка что мы не вышли за границы матрицы
-        while (y > 0 && matrix[x][y - 1] != 0 && matrix[x][y] == 1) {
-            matrix[x][y] = rectangleIndex;
+        while (y > 0 && matrix[y - 1][x] != 0 && matrix[y][x] == 1) {
+            matrix[y][x] = rectangleIndex;
             y--;
         }
 
