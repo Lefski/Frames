@@ -22,7 +22,7 @@ public class Main {
                 int stringsLength = Integer.parseInt(sizeLine[1]);
                 matrixManager.setMatrix(stringsAmount, stringsLength);
                 matrixManager.fillMatrix(reader);//заполнение матрицы, передаем читалку чтобы менеджер сам считал из инпута
-                matrixManager.solveMatrix();//todo вернуть
+                matrixManager.solveMatrix();
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -61,7 +61,7 @@ class MatrixManager {
         searcher.search(matrix);
         searcher.findRectangles(new Point(0, 0), new Point(stringsLength, stringsAmount));
         searcher.printMatrix();//todo убрать лишний инпут
-        searcher.printResult();
+        searcher.printResult();//todo дописать readme
     }
 
     public int[][] getMatrix() {
