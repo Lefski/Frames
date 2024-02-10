@@ -60,24 +60,8 @@ class MatrixManager {
     public void solveMatrix() {//начало поиска рамок, передаем координаты всей матрицы для поиска
         searcher.search(matrix);
         searcher.findRectangles(new Point(0, 0), new Point(stringsLength, stringsAmount));
-        searcher.printMatrix();//todo убрать лишний инпут
-        searcher.printResult();//todo дописать readme
-    }
-
-    public int[][] getMatrix() {
-        return matrix;
-    }
-
-    public int getStringsAmount() {
-        return stringsAmount;
-    }
-
-    public int getStringsLength() {
-        return stringsLength;
-    }
-
-    public Searcher getSearcher() {
-        return searcher;
+        //searcher.printMatrix();//опционально - печать матрицы при выводе
+        searcher.printResult();
     }
 }
 
@@ -115,7 +99,6 @@ class Searcher {
         xLength = matrix[0].length - 1;
         yLength = matrix.length - 1;
     }
-
     /*
         Рекурсивная функция, принимает левый верхний и правый нижний угол рамок, внутри которых производит поиск.
         Точки имеют координаты [x,y], где точка [0,0] это верхний левый угол матрицы, а [stringsLength,stringsAmount]
@@ -128,10 +111,10 @@ class Searcher {
                 //проверяем не нашли ли мы границу отмеченного прямоугольника
                 if (checkIfFoundMarkedBorder(matrix[y][x])) {
                     //пропускаем эту часть строки матрицы, т.к. её занимает уже отмеченный прямоугольник
-                    x += rectanglesLengthMap.get(matrix[y][x]) - 1; //todo можно написать лучше, здесь два раза и +1 в некст ифе обращаемся к матрице, можно наверное один, еще проблемы что перепрыгиваю за край матрицы с увеличением
+                    x += rectanglesLengthMap.get(matrix[y][x]) - 1;
                     //проверяем не нашли ли мы новый прямоугольник
-                } else if (checkIfFoundNewRectangleCorner(x, y)) {//todo поменять проверку а то костыль
-                    manageRectangle(x, y);//основная логика todo поменять название а то не очень отражает суть функции
+                } else if (checkIfFoundNewRectangleCorner(x, y)) {
+                    manageRectangle(x, y);//основная логика
                 }
             }
         }
